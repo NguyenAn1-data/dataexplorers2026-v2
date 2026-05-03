@@ -154,6 +154,4 @@ dataexplorers2026-v2/
 
 ## Liên hệ
 
-**Email nhóm:** datasync5ueh@gmail.com  
-**Deadline nộp bài:** 28/5/2026  
-**Vòng chung kết:** 04/6/2026 — Học viện Chính sách và Phát triển
+datasync5ueh@gmail.com

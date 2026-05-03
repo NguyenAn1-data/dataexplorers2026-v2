@@ -1,6 +1,7 @@
 """
 generate_report.py
-Tạo báo cáo kỹ thuật PDF (10-15 trang) cho Hạng mục A & D.
+Tạo báo cáo kỹ thuật PDF tiếng Việt cho Hạng mục A & D.
+Dùng font Arial TTF để hỗ trợ đầy đủ ký tự tiếng Việt.
 """
 import sys, io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
@@ -13,487 +14,530 @@ import os
 OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "..", "docs", "Bao_cao_ky_thuat_DataSync.pdf")
 os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
 
-# Font chứa Unicode/tiếng Việt: dùng DejaVu (đi kèm fpdf2)
-FONT_DIR = os.path.join(os.path.dirname(__file__), "fonts")
+ARIAL        = "C:\\Windows\\Fonts\\arial.ttf"
+ARIAL_BOLD   = "C:\\Windows\\Fonts\\arialbd.ttf"
+ARIAL_ITALIC = "C:\\Windows\\Fonts\\ariali.ttf"
+ARIAL_BI     = "C:\\Windows\\Fonts\\arialbi.ttf"
+MONO         = "C:\\Windows\\Fonts\\CascadiaMono.ttf"
+
 
 class PDF(FPDF):
     def __init__(self):
         super().__init__()
-        # Dùng font helvetica (latin) và encode bằng latin-1 mapping
-        # fpdf2 hỗ trợ Unicode natively với core fonts ở chế độ UTF-8
         self.set_auto_page_break(auto=True, margin=20)
-        self.add_font("DejaVu", "", "DejaVuSansCondensed.ttf", uni=True) if False else None
+        self.add_font("Arial", "",  ARIAL)
+        self.add_font("Arial", "B", ARIAL_BOLD)
+        self.add_font("Arial", "I", ARIAL_ITALIC)
+        self.add_font("Arial", "BI", ARIAL_BI)
+        self.add_font("Mono",  "",  MONO)
 
     def header(self):
-        self.set_font("Helvetica", "B", 9)
-        self.set_text_color(100, 100, 100)
-        self.cell(0, 8, "DATA EXPLORERS 2026 - Vong 2 | Nhom DataSync | Bao cao Ky thuat",
+        self.set_font("Arial", "I", 8)
+        self.set_text_color(120, 120, 120)
+        self.cell(0, 7, "DATA EXPLORERS 2026 – Vòng 2  |  Nhóm DataSync  |  Báo cáo Kỹ thuật",
                   align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         self.set_draw_color(200, 200, 200)
         self.line(self.l_margin, self.get_y(), self.w - self.r_margin, self.get_y())
-        self.ln(3)
+        self.ln(2)
 
     def footer(self):
-        self.set_y(-15)
-        self.set_font("Helvetica", "I", 8)
+        self.set_y(-14)
+        self.set_font("Arial", "I", 8)
         self.set_text_color(150, 150, 150)
-        self.cell(0, 10, f"Trang {self.page_no()}", align="C")
+        self.cell(0, 8, f"Trang {self.page_no()}", align="C")
 
     def title_page(self):
         self.add_page()
-        self.ln(30)
-        self.set_font("Helvetica", "B", 22)
-        self.set_text_color(30, 90, 160)
-        self.cell(0, 12, "BAO CAO KY THUAT", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.set_font("Helvetica", "B", 16)
-        self.set_text_color(50, 50, 50)
-        self.cell(0, 10, "DATA EXPLORERS 2026 - Vong 2", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.set_font("Helvetica", "", 13)
-        self.set_text_color(80, 80, 80)
+        self.ln(25)
+        self.set_font("Arial", "B", 24)
+        self.set_text_color(20, 80, 160)
+        self.cell(0, 13, "BÁO CÁO KỸ THUẬT", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.set_font("Arial", "B", 16)
+        self.set_text_color(40, 40, 40)
+        self.cell(0, 10, "DATA EXPLORERS 2026 – Vòng 2", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.set_font("Arial", "I", 12)
+        self.set_text_color(90, 90, 90)
         self.cell(0, 8, "From Data to Decision by MEXC Ventures", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.ln(20)
-        self.set_font("Helvetica", "B", 14)
-        self.set_text_color(30, 90, 160)
-        self.cell(0, 10, "NHOM DATASYNC", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.ln(5)
-        self.set_font("Helvetica", "", 11)
-        self.set_text_color(50, 50, 50)
-        members = [
-            "Nguyen Dang Hoang An (Nhom truong)",
-            "Le Thien Duc",
-            "Ta Ngoc Bao Ngan",
-            "Nguyen Trang Nhat Mai",
-            "Nguyen Quynh Tram",
-        ]
-        for m in members:
-            self.cell(0, 8, m, align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.ln(20)
-        self.set_font("Helvetica", "", 10)
-        self.set_text_color(100, 100, 100)
-        self.cell(0, 7, f"Hoc vien Chinh sach va Phat trien", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.cell(0, 7, f"Email: datasync5ueh@gmail.com", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.cell(0, 7, f"Ngay hoan thanh: {date.today().strftime('%d/%m/%Y')}", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.ln(18)
 
-    def section_title(self, text, level=1):
+        # Khung thông tin nhóm
+        self.set_fill_color(235, 243, 255)
+        self.set_draw_color(20, 80, 160)
+        box_x = self.l_margin + 20
+        box_w = self.w - 2 * self.l_margin - 40
+        self.set_x(box_x)
+        self.cell(box_w, 10, "", border="TLR", fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.set_x(box_x)
+        self.set_font("Arial", "B", 15)
+        self.set_text_color(20, 80, 160)
+        self.cell(box_w, 11, "NHÓM DATASYNC", align="C", border="LR", fill=True,
+                  new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.set_font("Arial", "", 11)
+        self.set_text_color(30, 30, 30)
+        members = [
+            ("Nguyễn Đăng Hoàng Ân", "Nhóm trưởng"),
+            ("Lê Thiên Đức", "Thành viên"),
+            ("Tạ Ngọc Bảo Ngân", "Thành viên"),
+            ("Nguyễn Trang Nhật Mai", "Thành viên"),
+            ("Nguyễn Quỳnh Trâm", "Thành viên"),
+        ]
+        for name, role in members:
+            self.set_x(box_x)
+            self.cell(box_w // 2 + 5, 9, f"  {name}", border="L", fill=True)
+            self.cell(box_w - box_w // 2 - 5, 9, role, border="R", fill=True,
+                      new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.set_x(box_x)
+        self.cell(box_w, 10, "", border="BLR", fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
+        self.ln(18)
+        self.set_font("Arial", "", 10)
+        self.set_text_color(110, 110, 110)
+        self.cell(0, 7, f"Email liên hệ: datasync5ueh@gmail.com", align="C",
+                  new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.cell(0, 7, f"Ngày hoàn thành: {date.today().strftime('%d/%m/%Y')}", align="C",
+                  new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
+    def h1(self, text):
         self.ln(5)
-        if level == 1:
-            self.set_font("Helvetica", "B", 14)
-            self.set_text_color(30, 90, 160)
-            self.set_fill_color(230, 240, 255)
-            self.cell(0, 9, text, fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        else:
-            self.set_font("Helvetica", "B", 11)
-            self.set_text_color(50, 50, 150)
-            self.cell(0, 8, text, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.set_font("Arial", "B", 13)
+        self.set_text_color(255, 255, 255)
+        self.set_fill_color(20, 80, 160)
+        self.cell(0, 9, f"  {text}", fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         self.set_text_color(0, 0, 0)
         self.ln(2)
 
-    def body(self, text, indent=0):
-        self.set_font("Helvetica", "", 10)
-        self.set_text_color(30, 30, 30)
-        self.set_x(self.l_margin + indent)
+    def h2(self, text):
+        self.ln(3)
+        self.set_font("Arial", "B", 11)
+        self.set_text_color(20, 80, 160)
+        self.set_fill_color(235, 243, 255)
+        self.cell(0, 8, f"  {text}", fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.set_text_color(0, 0, 0)
+        self.ln(1)
+
+    def para(self, text, indent=0):
+        self.set_font("Arial", "", 10)
+        self.set_text_color(25, 25, 25)
+        if indent:
+            self.set_x(self.l_margin + indent)
         self.multi_cell(0, 6, text)
         self.ln(1)
 
-    def bullet(self, text, indent=5):
-        self.set_font("Helvetica", "", 10)
-        self.set_text_color(30, 30, 30)
+    def bullet(self, text, indent=6):
+        self.set_font("Arial", "", 10)
+        self.set_text_color(25, 25, 25)
         x = self.l_margin + indent
         self.set_x(x)
-        self.cell(4, 6, chr(149))
+        self.cell(5, 6, "•")
         self.set_x(x + 5)
         self.multi_cell(0, 6, text)
 
-    def kv(self, key, value):
-        self.set_font("Helvetica", "B", 10)
-        self.set_text_color(50, 50, 50)
-        self.cell(55, 6, key + ":", new_x=XPos.RIGHT, new_y=YPos.LAST)
-        self.set_font("Helvetica", "", 10)
-        self.set_text_color(30, 30, 30)
-        self.multi_cell(0, 6, value)
-
-    def table(self, headers, rows, col_widths=None):
+    def table(self, headers, rows, col_widths=None, header_bg=(20, 80, 160)):
+        avail = self.w - self.l_margin - self.r_margin
         if col_widths is None:
-            w = (self.w - self.l_margin - self.r_margin) / len(headers)
+            w = avail / len(headers)
             col_widths = [w] * len(headers)
-        self.set_font("Helvetica", "B", 9)
-        self.set_fill_color(30, 90, 160)
+        # Header
+        self.set_font("Arial", "B", 9)
+        self.set_fill_color(*header_bg)
         self.set_text_color(255, 255, 255)
         for h, cw in zip(headers, col_widths):
             self.cell(cw, 7, h, border=1, fill=True, align="C")
         self.ln()
-        self.set_font("Helvetica", "", 9)
-        self.set_text_color(30, 30, 30)
+        # Rows
+        self.set_font("Arial", "", 9)
+        self.set_text_color(25, 25, 25)
         for i, row in enumerate(rows):
-            self.set_fill_color(245, 248, 255) if i % 2 == 0 else self.set_fill_color(255, 255, 255)
-            for cell, cw in zip(row, col_widths):
-                self.cell(cw, 6, str(cell), border=1, fill=True)
+            if i % 2 == 0:
+                self.set_fill_color(244, 248, 255)
+            else:
+                self.set_fill_color(255, 255, 255)
+            for cell_txt, cw in zip(row, col_widths):
+                self.cell(cw, 6, str(cell_txt), border=1, fill=True)
             self.ln()
         self.ln(3)
 
-    def code_block(self, code_text):
-        self.set_font("Courier", "", 8)
-        self.set_fill_color(245, 245, 245)
+    def code(self, text):
+        self.set_font("Mono", "", 8)
+        self.set_fill_color(246, 246, 246)
         self.set_text_color(30, 30, 30)
-        self.multi_cell(0, 5, code_text, fill=True, border=1)
+        self.multi_cell(0, 4.8, text, fill=True, border=1)
         self.ln(2)
 
 
+# ---------------------------------------------------------------------------
 def build_report():
     pdf = PDF()
 
-    # ── Trang bìa ──────────────────────────────────────────────────────────
+    # ── TRANG BÌA ────────────────────────────────────────────────────────────
     pdf.title_page()
 
-    # ── Trang 2: Mục lục ───────────────────────────────────────────────────
+    # ── MỤC LỤC ─────────────────────────────────────────────────────────────
     pdf.add_page()
-    pdf.section_title("MUC LUC")
+    pdf.h1("MỤC LỤC")
     toc = [
-        ("1.", "Tong quan du an va boi canh", "3"),
-        ("2.", "Hang muc A: Xu ly don hang tu dong", "4"),
-        ("2.1", "Kien truc pipeline", "4"),
-        ("2.2", "Thu vien va cong nghe", "5"),
-        ("2.3", "Xu ly file .eml (parse_eml.py)", "5"),
-        ("2.4", "Trich xuat PDF (parse_pdf.py)", "6"),
-        ("2.5", "Kiem tra hop le (validate.py)", "7"),
-        ("2.6", "Ghi database (db_writer.py)", "8"),
-        ("2.7", "Dieu phoi pipeline (main.py)", "9"),
-        ("2.8", "Xu ly truong hop dac biet", "9"),
-        ("3.", "Ket qua dat duoc", "10"),
-        ("4.", "Schema database", "11"),
-        ("5.", "Huong dan cai dat va chay", "12"),
-        ("6.", "Ket luan va ke hoach tiep theo", "13"),
+        ("1.",   "Tổng quan dự án và bối cảnh",                     "3"),
+        ("2.",   "Hạng mục A: Xử lý đơn hàng tự động",             "4"),
+        ("2.1",  "Kiến trúc pipeline",                               "4"),
+        ("2.2",  "Thư viện và công nghệ sử dụng",                   "4"),
+        ("2.3",  "Xử lý file .eml – parse_eml.py",                  "5"),
+        ("2.4",  "Trích xuất PDF – parse_pdf.py",                   "6"),
+        ("2.5",  "Kiểm tra hợp lệ – validate.py",                   "7"),
+        ("2.6",  "Ghi database – db_writer.py",                     "8"),
+        ("2.7",  "Điều phối pipeline – main.py",                    "9"),
+        ("2.8",  "Xử lý trường hợp đặc biệt",                      "9"),
+        ("3.",   "Kết quả đạt được",                                "10"),
+        ("4.",   "Schema database",                                 "11"),
+        ("5.",   "Hướng dẫn cài đặt và chạy",                      "12"),
+        ("6.",   "Kết luận và kế hoạch tiếp theo",                 "13"),
     ]
-    pdf.set_font("Helvetica", "", 10)
-    pdf.set_text_color(30, 30, 30)
-    for num, title, page in toc:
-        pdf.cell(12, 7, num)
+    pdf.set_font("Arial", "", 10)
+    pdf.set_text_color(25, 25, 25)
+    for num, title, pg in toc:
+        pdf.set_font("Arial", "B", 10)
+        pdf.cell(14, 7, num)
+        pdf.set_font("Arial", "", 10)
         pdf.cell(0, 7, title, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.ln(5)
-
-    # ── Trang 3: Tổng quan ─────────────────────────────────────────────────
-    pdf.add_page()
-    pdf.section_title("1. TONG QUAN DU AN VA BOI CANH")
-    pdf.body(
-        "Cong ty Co phan Xe dap Thong Nhat la doanh nghiep san xuat/phan phoi xe dap voi quy mo "
-        "hon 200 SKU, 5 nhom san pham chinh, van hanh theo mo hinh B2B voi hon 700 dai ly tren "
-        "ca nuoc. Hien tai, dai ly dat hang qua email/dien thoai/Zalo, nhan vien nhap thu cong "
-        "vao he thong ERP - quy trinh ton thoi gian va de sai sot."
-    )
     pdf.ln(3)
-    pdf.body("Muc tieu Vong 2 - DATA EXPLORERS 2026:")
-    items = [
-        "Tu dong hoa xu ly 1.132 don hang email thang 3/2026",
-        "Xay dung dashboard phan tich kinh doanh da chieu (2025 - T3/2026)",
-        "Du bao nhu cau Q2/2026 theo san pham, mau sac, hoat dong dai ly",
-        "Trinh bay va bao ve truoc Hoi dong giam khao",
-    ]
-    for it in items:
-        pdf.bullet(it)
-    pdf.ln(4)
-    pdf.section_title("Phan bo diem", level=2)
-    pdf.table(
-        ["Hang muc", "Noi dung", "Diem toi da"],
-        [
-            ["A", "Van hanh: Xu ly don hang tu dong", "25"],
-            ["B", "Phan tich: Dashboard & Insights", "30"],
-            ["C", "Du bao nhu cau & Chien luoc", "30"],
-            ["D", "Trinh bay & Bao ve", "15"],
-            ["Tong", "", "100"],
-        ],
-        [30, 110, 30]
-    )
 
-    # ── Trang 4-5: Hạng mục A ─────────────────────────────────────────────
+    # ── TỔNG QUAN ────────────────────────────────────────────────────────────
     pdf.add_page()
-    pdf.section_title("2. HANG MUC A: XU LY DON HANG TU DONG (25 DIEM)")
-    pdf.body(
-        "Nhom chon Phuong an A (Email + PDF .eml) de dat muc toi da 25/25 diem. Pipeline duoc "
-        "viet bang Python, chay hoan toan tu dong khong can can thiep thu cong sau khi khoi dong."
+    pdf.h1("1. TỔNG QUAN DỰ ÁN VÀ BỐI CẢNH")
+    pdf.para(
+        "Công ty Cổ phần Xe đạp Thống Nhất là doanh nghiệp sản xuất và phân phối xe đạp với hơn "
+        "200 SKU, 5 nhóm sản phẩm chính, vận hành theo mô hình B2B với hơn 700 đại lý trên toàn "
+        "quốc. Hiện tại, đại lý đặt hàng qua email, điện thoại hoặc Zalo; nhân viên phải nhập "
+        "thủ công vào hệ thống ERP, dẫn đến tốn nhiều thời gian và dễ xảy ra sai sót."
+    )
+    pdf.para("Mục tiêu Vòng 2 – DATA EXPLORERS 2026:")
+    for item in [
+        "Tự động hóa xử lý 1.132 đơn hàng email tháng 3/2026.",
+        "Xây dựng dashboard phân tích kinh doanh đa chiều (dữ liệu 2025 – T3/2026).",
+        "Dự báo nhu cầu Q2/2026 theo sản phẩm, màu sắc và hoạt động đại lý.",
+        "Trình bày và bảo vệ kết quả trước hội đồng giám khảo.",
+    ]:
+        pdf.bullet(item)
+    pdf.ln(3)
+    pdf.h2("Phân bổ điểm")
+    pdf.table(
+        ["Hạng mục", "Nội dung", "Điểm"],
+        [
+            ["A", "Vận hành: Xử lý đơn hàng tự động", "25"],
+            ["B", "Phân tích: Dashboard & Insights", "30"],
+            ["C", "Dự báo nhu cầu & Chiến lược", "30"],
+            ["D", "Trình bày & Bảo vệ", "15"],
+            ["Tổng", "", "100"],
+        ],
+        [20, 130, 20]
     )
 
-    pdf.section_title("2.1 Kien truc Pipeline", level=2)
-    pdf.code_block(
+    # ── HẠNG MỤC A ───────────────────────────────────────────────────────────
+    pdf.add_page()
+    pdf.h1("2. HẠNG MỤC A: XỬ LÝ ĐƠN HÀNG TỰ ĐỘNG (25 ĐIỂM)")
+    pdf.para(
+        "Nhóm chọn Phương án A (Email + PDF, file .eml) để đạt mức tối đa 25/25 điểm. "
+        "Pipeline được viết hoàn toàn bằng Python, tự động xử lý từ đầu đến cuối mà không cần "
+        "can thiệp thủ công sau khi khởi động."
+    )
+
+    pdf.h2("2.1  Kiến trúc Pipeline")
+    pdf.code(
         "1.132 file .eml\n"
         "      |\n"
         "      v\n"
-        " parse_eml.py   <- Phan tich email: From, Subject, Date, Message-ID, PDF MIME attachment\n"
+        " parse_eml.py   <-- Phân tích email: From, Subject, Date, Message-ID, file PDF đính kèm\n"
         "      |\n"
         "      v\n"
-        " parse_pdf.py   <- Trich xuat PDF: so don, ngay, MST, ten KH, bang san pham\n"
+        " parse_pdf.py   <-- Trích xuất PDF: số đơn, ngày, MST, tên khách hàng, bảng sản phẩm\n"
         "      |\n"
         "      v\n"
-        " validate.py    <- Kiem tra hop le: trung lap, ngay, ma hang, so luong, thanh tien\n"
+        " validate.py    <-- Kiểm tra hợp lệ: trùng lặp, ngày tháng, mã hàng, số lượng, thành tiền\n"
         "      |\n"
         "      v\n"
-        " db_writer.py   <- Ghi vao PostgreSQL: email_log -> sales_order -> order_line -> fact_sales"
+        " db_writer.py   <-- Ghi vào PostgreSQL: email_log -> sales_order -> order_line -> fact_sales"
     )
-    pdf.body(
-        "Pipeline thiet ke theo nguyen tac idempotent: co the chay lai nhieu lan ma khong gay "
-        "trung lap du lieu. Co che: kiem tra message_id (chi tiep tuc neu chua co trong email_log "
-        "voi status=SUCCESS) va so_number (kiem tra trong sales_order truoc khi insert)."
+    pdf.para(
+        "Pipeline thiết kế theo nguyên tắc idempotent: có thể chạy lại nhiều lần mà không gây "
+        "trùng lặp dữ liệu. Cơ chế: kiểm tra message_id (chỉ xử lý nếu chưa có trong email_log "
+        "với trạng thái SUCCESS) và so_number (kiểm tra trong sales_order trước khi INSERT)."
     )
 
-    pdf.section_title("2.2 Thu vien va Cong nghe", level=2)
+    pdf.h2("2.2  Thư viện và Công nghệ sử dụng")
     pdf.table(
-        ["Thu vien", "Phien ban", "Muc dich"],
+        ["Thư viện / Công nghệ", "Phiên bản", "Mục đích"],
         [
-            ["Python", "3.13", "Ngon ngu lap trinh chinh"],
-            ["pdfplumber", ">=0.10.0", "Trich xuat bang bieu tu PDF"],
-            ["psycopg2-binary", ">=2.9.0", "Ket noi PostgreSQL"],
-            ["email (stdlib)", "built-in", "Phan tich cau truc MIME cua .eml"],
+            ["Python", "3.13", "Ngôn ngữ lập trình chính"],
+            ["pdfplumber", ">=0.10.0", "Trích xuất bảng biểu từ PDF"],
+            ["psycopg2-binary", ">=2.9.0", "Kết nối và ghi dữ liệu vào PostgreSQL"],
+            ["email (stdlib)", "built-in", "Phân tích cấu trúc MIME của file .eml"],
+            ["PostgreSQL", "14+", "Cơ sở dữ liệu quan hệ lưu trữ đơn hàng"],
         ],
-        [40, 30, 100]
+        [55, 30, 85]
     )
 
+    # ── PARSE EML ────────────────────────────────────────────────────────────
     pdf.add_page()
-    pdf.section_title("2.3 Xu ly file .eml - parse_eml.py", level=2)
-    pdf.body(
-        "Moi email co cau truc MIME phuc tap: header co the ma hoa Base64 hoac Quoted-Printable, "
-        "file PDF dinh kem la payload nhi phan. Ham parse_eml() xu ly:"
+    pdf.h1("2. HẠNG MỤC A (tiếp theo)")
+    pdf.h2("2.3  Xử lý file .eml – parse_eml.py")
+    pdf.para(
+        "Mỗi file .eml có cấu trúc MIME nhiều tầng: header có thể mã hóa Base64 hoặc "
+        "Quoted-Printable, file PDF đính kèm là payload nhị phân. Hàm parse_eml() xử lý:"
     )
-    items = [
-        "Giai ma header: su dung decode_header() xu ly ca UTF-8 va ASCII",
-        "Trich message_id, from_address, received_at (parsedate_to_datetime)",
-        "Trich so don hang tu Subject bang regex: r\"BH26[._](\\d+)\"",
-        "Tim PDF dinh kem trong cay MIME (Content-Type: application/pdf)",
-        "Giai ma base64 lay pdf_bytes tra ve",
-        "Trich MST tu email body bang regex: r\"MST[:\\s]*([0-9]{9,10})\"",
-    ]
-    for it in items:
-        pdf.bullet(it)
+    for item in [
+        "Giải mã header: dùng decode_header() để xử lý cả UTF-8 và ASCII.",
+        "Trích message_id, from_address, received_at (parsedate_to_datetime).",
+        "Trích số đơn hàng từ Subject bằng regex: BH26[._](\\d+).",
+        "Tìm file PDF đính kèm trong cây MIME (Content-Type: application/pdf).",
+        "Giải mã base64 lấy pdf_bytes trả về để bước tiếp theo xử lý.",
+        "Trích MST từ body email bằng regex: MST[:\\s]*([0-9]{9,10}).",
+    ]:
+        pdf.bullet(item)
 
-    pdf.section_title("2.4 Trich xuat PDF - parse_pdf.py", level=2)
-    pdf.body(
-        "Su dung pdfplumber de trich xuat bang bieu tu PDF. Moi don hang co the trai dai "
-        "nhieu trang (3-5 trang voi don hang lon). Cach xu ly:"
+    pdf.h2("2.4  Trích xuất PDF – parse_pdf.py")
+    pdf.para(
+        "Dùng pdfplumber để trích xuất bảng biểu từ PDF. Mỗi đơn hàng có thể trải dài nhiều "
+        "trang (thường 2–5 trang với đơn hàng có nhiều sản phẩm). Cách xử lý:"
     )
-    items = [
-        "Trang dau, bang dau = bang header: so don, ngay, MST, ten dai ly",
-        "Cac bang con lai (moi trang) = bang san pham: STT | Ma hang | Ten SP | DVT | SL | Don gia | Thanh tien",
-        "Loc dong tieu de (STT header row) va dong tong cong (Tong cong row)",
-        "Ham _is_product_code() nhan dien ma hang: so thuan 10-16 ky tu HOAC dang TP0099.0000570",
-        "Ham _parse_amount() xu ly so VND: '1.898.148' -> 1898148.0 (cham la phan ngan)",
-    ]
-    for it in items:
-        pdf.bullet(it)
-    pdf.body(
-        "Kho khan: PDF tao tu phien ban tieng Viet nen ten san pham bi garble unicode, "
-        "tuy nhien cac truong du lieu quan trong (ma hang, so luong, don gia) la ASCII nen "
-        "khong bi anh huong."
-    )
+    for item in [
+        "Trang đầu, bảng đầu tiên = bảng header đơn hàng: số đơn, ngày đặt, MST, tên đại lý.",
+        "Các bảng còn lại (tất cả trang) = bảng sản phẩm: STT | Mã hàng | Tên SP | ĐVT | SL | Đơn giá | Thành tiền.",
+        "Lọc dòng tiêu đề bảng (dòng STT) và dòng tổng cộng (STT trống, không có mã hàng).",
+        "Hàm _is_product_code() nhận diện mã hàng: số thuần 10–16 ký tự HOẶC dạng TP0099.0000570.",
+        "Hàm _parse_amount() xử lý số VND: '1.898.148' → 1898148.0 (dấu chấm là phân ngàn).",
+        "Xử lý trường hợp PDF có encoding tiếng Việt bị garble – các trường số liệu (mã hàng, giá) vẫn là ASCII.",
+    ]:
+        pdf.bullet(item)
 
+    # ── VALIDATE ─────────────────────────────────────────────────────────────
     pdf.add_page()
-    pdf.section_title("2.5 Kiem tra hop le - validate.py", level=2)
-    pdf.body("Pipeline kiem tra 5 nhom dieu kien truoc khi ghi database:")
+    pdf.h2("2.5  Kiểm tra hợp lệ – validate.py")
+    pdf.para("Pipeline kiểm tra 5 nhóm điều kiện trước khi ghi dữ liệu vào database:")
     pdf.table(
-        ["Nhom kiem tra", "Noi dung", "Xu ly khi loi"],
+        ["Nhóm kiểm tra", "Nội dung", "Xử lý khi lỗi"],
         [
-            ["1. So don hang", "Phai co so_number, khong duoc trung voi DB", "Fatal - bo qua don"],
-            ["2. Ngay dat hang", "Phai thuoc thang 3/2026", "Ghi loi, bo qua"],
-            ["3. Khach hang", "Phai co MST trong PDF hoac email body", "Ghi loi"],
-            ["4. Ma san pham", "Phai ton tai trong bang product cua DB", "Ghi loi tong hop"],
-            ["5. So luong & gia", "qty > 0, gia >= 0, thanh tien khop", "Ghi loi tung dong"],
+            ["1. Số đơn hàng", "Phải có so_number, không được trùng với DB", "Fatal – bỏ qua đơn"],
+            ["2. Ngày đặt hàng", "Phải thuộc tháng 3/2026", "Ghi lỗi, bỏ qua"],
+            ["3. Khách hàng", "Phải có MST trong PDF hoặc email body", "Ghi lỗi"],
+            ["4. Mã sản phẩm", "Phải tồn tại trong bảng product của DB", "Ghi lỗi tổng hợp"],
+            ["5. Số lượng & giá", "qty > 0, đơn giá >= 0, thành tiền khớp tính toán", "Ghi lỗi từng dòng"],
         ],
-        [35, 95, 42]
+        [38, 100, 32]
     )
-    pdf.body(
-        "Kiem tra thanh tien dung dual-tolerance de xu ly ca don hang so luong lon (>100 chiec) "
-        "va don gia le thap phan:"
+    pdf.para(
+        "Kiểm tra thành tiền dùng dual-tolerance để xử lý cả đơn hàng số lượng lớn "
+        "(đơn giá có phần lẻ thập phân) và đơn hàng thông thường:"
     )
-    pdf.code_block(
-        "expected = qty * unit_price\n"
-        "abs_diff = abs(expected - line_total)\n"
-        "rel_diff = abs_diff / line_total  # relative tolerance\n"
-        "# Chi bao loi neu CA HAI vuot nguong:\n"
-        "if abs_diff > 50 and rel_diff > 0.0001:  # 50 VND tuyet doi VA 0.01% tuong doi\n"
+    pdf.code(
+        "expected  = qty * unit_price\n"
+        "abs_diff  = abs(expected - line_total)\n"
+        "rel_diff  = abs_diff / line_total        # sai lệch tương đối\n"
+        "\n"
+        "# Chỉ báo lỗi khi CẢ HAI điều kiện vượt ngưỡng:\n"
+        "if abs_diff > 50 and rel_diff > 0.0001:  # 50 VND tuyệt đối VÀ 0,01% tương đối\n"
         "    errors.append(...)"
     )
 
-    pdf.section_title("2.6 Ghi database - db_writer.py", level=2)
-    pdf.body("Toan bo viec ghi du lieu trong 1 transaction de dam bao tinh nhat quan:")
-    items = [
-        "Lookup customer_code tu tax_code (MST): khop chinh xac, roi khop sau khi LTRIM('0')",
-        "INSERT email_log: ghi trang thai ngay tu dau (PROCESSING)",
-        "INSERT sales_order: so don, ngay, khach hang, tong tien/sl (trigger tu dong cap nhat)",
-        "INSERT order_line (execute_batch): chèn nhanh toan bo dong san pham 1 lan",
-        "UPDATE email_log: doi status -> SUCCESS/ERROR",
-        "populate_fact_sales(): INSERT...SELECT ket noi 7 bang, NOT EXISTS de tranh trung",
-    ]
-    for it in items:
-        pdf.bullet(it)
+    pdf.h2("2.6  Ghi database – db_writer.py")
+    pdf.para("Toàn bộ việc ghi dữ liệu thực hiện trong một transaction để đảm bảo tính nhất quán:")
+    for item in [
+        "Tra cứu customer_code từ tax_code (MST): khớp chính xác, rồi khớp sau khi LTRIM('0').",
+        "INSERT email_log: ghi trạng thái ngay từ đầu (PROCESSING).",
+        "INSERT sales_order: số đơn, ngày, khách hàng – trigger tự động cập nhật tổng tiền/số lượng.",
+        "INSERT order_line (execute_batch): chèn nhanh toàn bộ dòng sản phẩm trong một lần gọi.",
+        "UPDATE email_log: đổi trạng thái thành SUCCESS hoặc ERROR kèm chi tiết lỗi.",
+        "populate_fact_sales(): INSERT…SELECT kết nối 7 bảng, dùng NOT EXISTS để tránh trùng.",
+    ]:
+        pdf.bullet(item)
 
+    # ── MAIN & ĐẶC BIỆT ──────────────────────────────────────────────────────
     pdf.add_page()
-    pdf.section_title("2.7 Dieu phoi Pipeline - main.py", level=2)
-    pdf.body(
-        "main.py ket noi cac module lai, xu ly toan bo 1.132 file voi progress bar, "
-        "ghi log chi tiet va xuat summary.json sau khi chay xong:"
+    pdf.h2("2.7  Điều phối Pipeline – main.py")
+    pdf.para(
+        "main.py kết nối các module lại với nhau, hiển thị thanh tiến trình, ghi log chi tiết "
+        "và xuất file summary.json sau khi chạy xong:"
     )
-    pdf.code_block(
+    pdf.code(
         "for eml_path in eml_files:\n"
-        "    eml = parse_eml(eml_path)          # B1: parse email\n"
-        "    pdf = parse_pdf(eml['pdf_bytes'])   # B2: parse PDF\n"
-        "    errs = validate_order(eml, pdf, valid_products, existing_so)\n"
-        "    if errs: log_error(); continue      # B3: validate\n"
-        "    customer = lookup_customer(conn, mst)\n"
-        "    insert_order(conn, eml, pdf, customer)  # B4-5: ghi DB\n"
-        "    existing_so.add(so_number)          # cap nhat cache"
+        "    eml  = parse_eml(eml_path)              # Bước 1: phân tích email\n"
+        "    pdf  = parse_pdf(eml['pdf_bytes'])       # Bước 2: trích xuất PDF\n"
+        "    errs = validate_order(eml, pdf, ...)     # Bước 3: kiểm tra hợp lệ\n"
+        "    if errs:\n"
+        "        log_error(errs); continue\n"
+        "    customer = lookup_customer(conn, mst)    # Bước 4: tra cứu khách hàng\n"
+        "    insert_order(conn, eml, pdf, customer)   # Bước 5: ghi database\n"
+        "    existing_so.add(so_number)               # Cập nhật cache tránh trùng"
     )
 
-    pdf.section_title("2.8 Xu ly Truong hop Dac biet", level=2)
-    pdf.body("Trong qua trinh chay, phat hien va xu ly cac van de phat sinh:")
+    pdf.h2("2.8  Xử lý Trường hợp Đặc biệt")
+    pdf.para("Trong quá trình chạy, phát hiện và xử lý các vấn đề phát sinh sau:")
     pdf.table(
-        ["Van de", "So luong", "Giai phap"],
+        ["Vấn đề", "Số lượng", "Giải pháp"],
         [
-            ["KH moi (MST chua co trong DB)", "92 MST", "fix_missing_data.py: tu dong them KH moi"],
-            ["Ma san pham moi chua co trong DB", "~30 ma", "fix_all_remaining.py: tu dong them SP moi"],
-            ["Ma SP dang TP0099.0000570 (co dau cham)", "2 don", "Cap nhat _is_product_code() regex"],
-            ["Sai lech thanh tien > 50 VND (don lon)", "1 don", "Them relative tolerance 0.01%"],
-            ["Email trung (da xu ly o lan chay truoc)", "Nhieu", "Skip qua message_id cache"],
+            ["Khách hàng mới (MST chưa có trong DB)", "92 MST", "fix_missing_data.py: tự động đăng ký KH mới"],
+            ["Mã sản phẩm mới chưa có trong DB", "~30 mã", "fix_all_remaining.py: tự động thêm sản phẩm mới"],
+            ["Mã SP dạng TP0099.0000570 (có dấu chấm)", "2 đơn", "Cập nhật regex _is_product_code()"],
+            ["Sai lệch thành tiền > 50 VND (đơn lớn)", "1 đơn", "Thêm kiểm tra sai lệch tương đối 0,01%"],
+            ["Email trùng (đã xử lý lần trước)", "Nhiều", "Bỏ qua qua cache message_id (chỉ SUCCESS)"],
         ],
-        [65, 25, 82]
+        [68, 25, 77]
     )
 
-    # ── Trang 10: Kết quả ─────────────────────────────────────────────────
+    # ── KẾT QUẢ ──────────────────────────────────────────────────────────────
     pdf.add_page()
-    pdf.section_title("3. KET QUA DAT DUOC")
-    pdf.body("Sau khi chay pipeline va xu ly cac truong hop dac biet:")
+    pdf.h1("3. KẾT QUẢ ĐẠT ĐƯỢC")
+    pdf.para("Sau khi chạy pipeline và xử lý các trường hợp đặc biệt, toàn bộ 1.132 đơn hàng đã được ghi thành công:")
     pdf.table(
-        ["Bang", "So hang", "Mo ta"],
+        ["Bảng", "Số dòng T3/2026", "Mô tả"],
         [
-            ["email_log", "1.132 rows (100% SUCCESS)", "Trang thai xu ly tung email"],
-            ["sales_order", "1.132 rows", "Don hang BH26.0935 -> BH26.2066"],
-            ["order_line", "8.721 rows", "Chi tiet san pham tung don hang"],
-            ["fact_sales (T3/2026)", "8.721 rows", "Du lieu phan tich doanh thu"],
+            ["email_log", "1.132 (100% SUCCESS)", "Nhật ký trạng thái xử lý từng email"],
+            ["sales_order", "1.132 đơn hàng", "Đơn hàng BH26.0935 đến BH26.2066"],
+            ["order_line", "8.721 dòng", "Chi tiết sản phẩm trong từng đơn"],
+            ["fact_sales", "8.721 dòng", "Dữ liệu phân tích doanh thu đa chiều"],
         ],
-        [40, 58, 74]
+        [35, 55, 80]
     )
-    pdf.body("Thong ke doanh thu thang 3/2026:")
+    pdf.h2("Thống kê doanh thu tháng 3/2026")
     pdf.table(
-        ["Chi so", "Gia tri"],
+        ["Chỉ số", "Giá trị"],
         [
-            ["Tong don hang", "1.132 don"],
-            ["Tong so luong", "25.489 chiec"],
-            ["Tong doanh thu", "~40,7 ty VND (40.691.947.133 VND)"],
-            ["Doanh thu binh quan/don", "~35,9 trieu VND"],
-            ["So dong san pham trung binh/don", "7,7 dong"],
+            ["Tổng số đơn hàng", "1.132 đơn"],
+            ["Tổng số lượng xe", "25.489 chiếc"],
+            ["Tổng doanh thu", "40.691.947.133 VND (~40,7 tỷ VND)"],
+            ["Doanh thu bình quân mỗi đơn", "~35,9 triệu VND"],
+            ["Số dòng sản phẩm trung bình mỗi đơn", "7,7 dòng"],
+            ["Tỷ lệ xử lý thành công", "100% (1.132/1.132)"],
         ],
-        [70, 100]
+        [90, 80]
     )
-    pdf.body(
-        "100% don hang thang 3/2026 da duoc xu ly thanh cong va ghi vao database, "
-        "san sang cho cac buoc phan tich o Hang muc B va C."
+    pdf.para(
+        "Toàn bộ dữ liệu tháng 3/2026 đã sẵn sàng trong database, cùng với lịch sử "
+        "2025–T2/2026 (17.031 dòng fact_sales), tạo nền tảng cho phân tích và dự báo "
+        "ở các hạng mục tiếp theo."
     )
 
-    # ── Trang 11: Schema ──────────────────────────────────────────────────
+    # ── SCHEMA ───────────────────────────────────────────────────────────────
     pdf.add_page()
-    pdf.section_title("4. SCHEMA DATABASE")
-    pdf.body(
-        "Database: tnbike_db | Schema: tnbike | PostgreSQL 14\n"
-        "Gom 9 bang chinh + 4 views + 1 trigger tu dong cap nhat tong tien:"
+    pdf.h1("4. SCHEMA DATABASE")
+    pdf.para(
+        "Cơ sở dữ liệu: tnbike_db  |  Schema: tnbike  |  PostgreSQL 14\n"
+        "Gồm 9 bảng chính + 4 views + 1 trigger tự động cập nhật tổng tiền đơn hàng:"
     )
     pdf.table(
-        ["Bang", "So hang (sau pipeline)", "Mo ta"],
+        ["Bảng", "Số dòng (sau pipeline)", "Mô tả"],
         [
-            ["product_group", "5", "Nhom san pham (Tre Em, Dia Hinh,...)"],
-            ["product_line", "~75", "Dong san pham"],
-            ["product", "247+", "SKU san pham (ma hang, ten, don vi)"],
-            ["product_price", "247+", "Lich su gia ban"],
-            ["province", "63", "Tinh/thanh pho + vung mien"],
-            ["customer", "700+", "Dai ly (ma KH, ten, MST, tinh, tier)"],
-            ["sales_order", "1.132 T3/2026", "Don hang (so, ngay, KH, tong)"],
-            ["order_line", "8.721 T3/2026", "Dong san pham (ma, SL, gia, thanh tien)"],
-            ["fact_sales", "8.721 T3/2026", "Bang phan tich (full dimension)"],
-            ["email_log", "1.132", "Nhat ky xu ly email (them boi pipeline)"],
+            ["product_group", "5", "Nhóm sản phẩm (Trẻ Em, Địa Hình, Phổ Thông,...)"],
+            ["product_line", "~75", "Dòng sản phẩm trong từng nhóm"],
+            ["product", "247+", "SKU sản phẩm (mã hàng, tên, đơn vị tính)"],
+            ["product_price", "247+", "Lịch sử giá bán theo thời gian"],
+            ["province", "63", "Tỉnh/thành phố và vùng miền"],
+            ["customer", "700+", "Đại lý (mã KH, tên, MST, tỉnh, tier)"],
+            ["sales_order", "1.132 T3/2026", "Đơn hàng (số đơn, ngày, KH, tổng tiền)"],
+            ["order_line", "8.721 T3/2026", "Dòng sản phẩm (mã, số lượng, đơn giá, thành tiền)"],
+            ["fact_sales", "8.721 T3/2026", "Bảng phân tích đầy đủ chiều dữ liệu"],
+            ["email_log", "1.132", "Nhật ký xử lý email (bảng thêm bởi pipeline)"],
         ],
-        [38, 50, 84]
+        [38, 48, 84]
     )
-    pdf.body(
-        "Trigger trg_order_line_after_insert: sau moi INSERT vao order_line, "
-        "tu dong cap nhat total_amount, total_quantity, line_count trong sales_order."
+    pdf.para(
+        "Trigger trg_order_line_after_insert: sau mỗi INSERT vào order_line, "
+        "tự động cập nhật total_amount, total_quantity và line_count trong sales_order."
     )
 
-    # ── Trang 12: Cài đặt ─────────────────────────────────────────────────
+    # ── CÀI ĐẶT ──────────────────────────────────────────────────────────────
     pdf.add_page()
-    pdf.section_title("5. HUONG DAN CAI DAT VA CHAY")
-    pdf.section_title("Yeu cau he thong", level=2)
-    items = [
-        "Python 3.11+ (khuyen nghi 3.13)",
+    pdf.h1("5. HƯỚNG DẪN CÀI ĐẶT VÀ CHẠY")
+    pdf.h2("Yêu cầu hệ thống")
+    for item in [
+        "Python 3.11+ (khuyến nghị 3.13)",
         "PostgreSQL 14+ (port 5432)",
-        "RAM toi thieu 4GB",
-        "OS: Windows 10/11 hoac Linux/macOS",
-    ]
-    for it in items:
-        pdf.bullet(it)
-    pdf.section_title("Cac buoc cai dat", level=2)
+        "RAM tối thiểu 4 GB",
+        "Thư mục chứa 1.132 file .eml của tháng 3/2026",
+    ]:
+        pdf.bullet(item)
+    pdf.h2("Các bước cài đặt")
     steps = [
-        ("B1: Clone repo", "git clone https://github.com/NguyenAn1-data/dataexplorers2026-v2.git\ncd dataexplorers2026-v2"),
-        ("B2: Cai thu vien", "pip install -r pipeline/requirements.txt"),
-        ("B3: Cau hinh DB", "copy pipeline\\config.example.py pipeline\\config.py\n# Sua config.py: dien mat khau PostgreSQL va duong dan thu muc email"),
-        ("B4: Khoi tao DB", "cd pipeline\npython setup_db.py\n# -> Tao tnbike_db, chay 01_create_tables.sql + 02_import_data.sql"),
-        ("B5: Chay pipeline", "python main.py\n# -> Xu ly 1.132 file .eml, ghi vao database\n# -> Xem ket qua: logs/summary.json"),
+        ("Bước 1: Sao chép mã nguồn",
+         "git clone https://github.com/NguyenAn1-data/dataexplorers2026-v2.git\n"
+         "cd dataexplorers2026-v2"),
+        ("Bước 2: Cài thư viện Python",
+         "pip install -r pipeline/requirements.txt"),
+        ("Bước 3: Cấu hình database",
+         "copy pipeline\\config.example.py pipeline\\config.py\n"
+         "# Mở config.py, điền mật khẩu PostgreSQL và đường dẫn thư mục email"),
+        ("Bước 4: Khởi tạo database",
+         "cd pipeline\n"
+         "python setup_db.py\n"
+         "# Tạo tnbike_db, chạy 01_create_tables.sql + 02_import_data.sql"),
+        ("Bước 5: Chạy pipeline",
+         "python main.py\n"
+         "# Xử lý 1.132 file .eml, ghi vào database\n"
+         "# Xem kết quả tổng hợp: logs/summary.json"),
     ]
-    for title, code in steps:
-        pdf.body(title)
-        pdf.code_block(code)
+    for title, code_txt in steps:
+        pdf.para(title)
+        pdf.code(code_txt)
 
-    pdf.section_title("Kiem tra ket qua", level=2)
-    pdf.body("Sau khi chay pipeline, kiem tra trong pgAdmin hoac psql:")
-    pdf.code_block(
-        "-- Kiem tra email_log\nSELECT processing_status, COUNT(*) FROM tnbike.email_log GROUP BY 1;\n\n"
-        "-- Kiem tra doanh thu T3/2026\nSELECT COUNT(*), SUM(total_amount) FROM tnbike.sales_order\n"
-        "WHERE fiscal_year=2026 AND fiscal_month=3;\n\n"
-        "-- Ket qua mong doi: 1132 SUCCESS, tong ~40.7 ty VND"
+    pdf.h2("Kiểm tra kết quả trong pgAdmin")
+    pdf.code(
+        "-- Kiểm tra trạng thái xử lý email\n"
+        "SELECT processing_status, COUNT(*)\n"
+        "FROM tnbike.email_log\n"
+        "GROUP BY processing_status;\n"
+        "-- Kết quả mong đợi: SUCCESS = 1132\n\n"
+        "-- Kiểm tra doanh thu tháng 3/2026\n"
+        "SELECT COUNT(*) AS so_don, SUM(total_amount) AS doanh_thu\n"
+        "FROM tnbike.sales_order\n"
+        "WHERE fiscal_year = 2026 AND fiscal_month = 3;\n"
+        "-- Kết quả mong đợi: 1132 đơn, ~40,7 tỷ VND"
     )
 
-    # ── Trang 13-14: Kết luận ─────────────────────────────────────────────
+    # ── KẾT LUẬN ─────────────────────────────────────────────────────────────
     pdf.add_page()
-    pdf.section_title("6. KET LUAN VA KE HOACH TIEP THEO")
-    pdf.section_title("Ket qua Hang muc A", level=2)
-    pdf.body(
-        "Nhom da xay dung thanh cong pipeline xu ly don hang tu dong dat 100% hieu qua "
-        "(1.132/1.132 don hang). Phuong an A (Email + PDF) duoc chon de toi da hoa diem so. "
-        "Pipeline co kha nang:"
+    pdf.h1("6. KẾT LUẬN VÀ KẾ HOẠCH TIẾP THEO")
+    pdf.h2("Kết quả Hạng mục A")
+    pdf.para(
+        "Nhóm DataSync đã xây dựng thành công pipeline xử lý đơn hàng tự động đạt 100% hiệu quả "
+        "(1.132/1.132 đơn hàng). Lựa chọn Phương án A (Email + PDF) thay vì chỉ đọc PDF giúp "
+        "tối đa hóa điểm số (25 điểm thay vì 20 điểm). Pipeline có khả năng:"
     )
-    items = [
-        "Xu ly cau truc MIME phuc tap cua email (base64, quoted-printable, multi-part)",
-        "Trich xuat chinh xac du lieu tu PDF nhieu trang bang pdfplumber",
-        "Kiem tra hop le toan dien voi dual-tolerance cho tinh toan tai chinh",
-        "Tu dong dang ky khach hang va san pham moi phat hien trong email",
-        "Chay idempotent: an toan khi restart, khong gay du lieu trung lap",
-        "Ghi du lieu theo dung schema: email_log, sales_order, order_line, fact_sales",
-    ]
-    for it in items:
-        pdf.bullet(it)
+    for item in [
+        "Xử lý cấu trúc MIME phức tạp của email (base64, quoted-printable, đa tầng).",
+        "Trích xuất chính xác dữ liệu từ PDF nhiều trang bằng pdfplumber.",
+        "Kiểm tra hợp lệ toàn diện với dual-tolerance cho tính toán tài chính.",
+        "Tự động đăng ký khách hàng và sản phẩm mới phát hiện trong email.",
+        "Chạy idempotent: an toàn khi khởi động lại, không gây dữ liệu trùng lặp.",
+        "Ghi dữ liệu đúng schema: email_log, sales_order, order_line, fact_sales.",
+    ]:
+        pdf.bullet(item)
 
-    pdf.section_title("Ke hoach tiep theo", level=2)
+    pdf.h2("Kế hoạch tiếp theo")
     pdf.table(
-        ["Hang muc", "Noi dung", "Trang thai"],
+        ["Hạng mục", "Nội dung", "Trạng thái"],
         [
-            ["B - Dashboard", "6 man hinh Power BI/Metabase, BCG matrix, RFM", "Dang thuc hien"],
-            ["C - Du bao", "Prophet/SARIMA du bao Q2/2026, LLM integration", "Chua bat dau"],
-            ["D - Bao cao", "Bao cao ky thuat, Slide 10-15 trang, Video 5-7 phut", "Dang thuc hien"],
+            ["B – Dashboard", "6 màn hình Power BI/Metabase, BCG matrix, phân tích RFM", "Đang thực hiện"],
+            ["C – Dự báo", "Mô hình Prophet/SARIMA dự báo Q2/2026, tích hợp LLM", "Chưa bắt đầu"],
+            ["D – Trình bày", "Slide 10–15 trang, video demo 5–7 phút", "Đang thực hiện"],
         ],
-        [30, 110, 32]
+        [25, 120, 25]
+    )
+    pdf.para(
+        "Với nền tảng dữ liệu đầy đủ từ 2025 đến T3/2026, nhóm tự tin có thể xây dựng "
+        "dashboard phân tích và mô hình dự báo có giá trị kinh doanh thực tế cho "
+        "Công ty Cổ phần Xe đạp Thống Nhất."
     )
 
-    pdf.body(
-        "Du lieu T3/2026 da san sang trong database, cung voi lich su 2025-T2/2026, "
-        "tao nen nen tang du lieu day du cho phan tich va du bao o cac hang muc tiep theo."
-    )
-
-    pdf.ln(10)
-    pdf.set_font("Helvetica", "I", 9)
-    pdf.set_text_color(100, 100, 100)
-    pdf.cell(0, 6, "---", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.cell(0, 6, "Bao cao nay duoc tao tu dong boi generate_report.py", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.cell(0, 6, f"Nhom DataSync | DATA EXPLORERS 2026 | {date.today().strftime('%d/%m/%Y')}", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.ln(8)
+    pdf.set_font("Arial", "I", 9)
+    pdf.set_text_color(140, 140, 140)
+    pdf.cell(0, 6, "Báo cáo được tạo tự động bởi generate_report.py", align="C",
+             new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 6, f"Nhóm DataSync – DATA EXPLORERS 2026 – {date.today().strftime('%d/%m/%Y')}",
+             align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     pdf.output(OUTPUT_PATH)
-    print(f"Da tao bao cao: {OUTPUT_PATH}")
     return OUTPUT_PATH
 
 
 if __name__ == "__main__":
     path = build_report()
-    print(f"Mo file: {os.path.abspath(path)}")
+    print(f"Đã tạo báo cáo: {os.path.abspath(path)}")
