@@ -1,0 +1,34 @@
+# Credentials — không đẩy lên GitHub
+pipeline/config.py
+
+# Dữ liệu thô (quá lớn cho GitHub)
+Emails & Files/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Logs chạy pipeline (output cục bộ)
+pipeline/logs/*.json
+pipeline/logs/*.log
+
+# Môi trường ảo
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Temp files từ Word/Excel
+~$*
