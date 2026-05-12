@@ -18,14 +18,8 @@
 
 ## Tổng quan dự án
 
-Xây dựng hệ thống xử lý dữ liệu bán hàng tự động cho **Công ty Cổ phần Xe đạp Thống Nhất**, bao gồm:
 
-| Hạng mục | Nội dung | Điểm |
-|---|---|---|
-| **A** | Pipeline tự động xử lý 1.132 đơn hàng từ email tháng 3/2026 | 25 |
-| **B** | Dashboard phân tích kinh doanh đa chiều | 30 |
-| **C** | Dự báo nhu cầu & chiến lược Q2/2026 | 30 |
-| **D** | Báo cáo kỹ thuật & trình bày | 15 |
+
 
 ---
 
