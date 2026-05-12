@@ -16,21 +16,6 @@
 
 ---
 
-## Tổng quan dự án
-
-
-
-
----
-
-## Hạng mục A — Pipeline xử lý đơn hàng tự động
-
-### Kết quả đạt được
-- **1.132/1.132 đơn hàng** xử lý thành công (100%)
-- **8.721 dòng sản phẩm** được ghi vào database
-- **~40,7 tỷ VND** doanh thu tháng 3/2026 đã được nhập
-- Thời gian xử lý: < 5 phút cho toàn bộ 1.132 file
-
 ### Kiến trúc pipeline
 
 ```
