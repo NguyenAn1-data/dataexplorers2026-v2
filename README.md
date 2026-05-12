@@ -1,6 +1,6 @@
 # DataExplorers 2026 – Vòng 2
-### From Data to Decision by MEXC Ventures
-**Nhóm DataSync** | Học viện Chính sách và Phát triển
+### From Data to Decision 
+**Nhóm DataSync**
 
 ---
 
