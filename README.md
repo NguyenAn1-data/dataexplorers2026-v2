@@ -45,7 +45,7 @@
 
 ---
 
-## Cài đặt & Chạy Pipeline (Hướng dẫn từ máy mới hoàn toàn)
+## Cài đặt & Chạy Pipeline 
 
 > Đọc toàn bộ hướng dẫn này trước khi bắt đầu. Mỗi bước phải hoàn thành mới chạy bước tiếp theo.
 
