@@ -22,7 +22,7 @@
 | Lê Thiên Đức | Thành viên |
 | Tạ Ngọc Bảo Ngân | Thành viên |
 | Nguyễn Trang Nhật Mai | Thành viên |
-| Nguyễn Quỳnh Trâm | Thành viên |
+| Trần Nguyễn Quỳnh Trâm | Thành viên |
 
 **Liên hệ:** datasync5ueh@gmail.com
 
