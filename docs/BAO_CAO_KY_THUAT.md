@@ -2,7 +2,7 @@
 
 # DATA EXPLORERS 2026 — VÒNG 2
 
-## *From Data to Decision by MEXC Ventures*
+## *From Data to Decision*
 
 ---
 
