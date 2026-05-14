@@ -6,54 +6,33 @@ Module forecasting cho cuộc thi DataExplorers2026 Vòng 2.
 
 ```
 forecast/
-├─ README.md                   ← file này
-├─ pipeline_forecast.py        ← ⭐ FILE GỘP — chạy 1 lệnh là xong toàn bộ Phase C
-├─ 01_build_dataset.py         ← (modular) gom dữ liệu từ PostgreSQL → parquet
-├─ 02_backtest_total_group.py  ← (modular) backtest T3/26 ở cấp total + 5 group
-├─ 03_backtest_sku.py          ← (modular) backtest SKU + LightGBM comparison
-├─ 04_backtest_reconciled.py   ← (modular) top-down / shrinkage / hybrid
-├─ 05_forecast_q2_sales.py     ← (modular) Câu hỏi 1: dự báo Apr/May/Jun
-├─ 06_forecast_q2_color.py     ← (modular) Câu hỏi 2: màu + SKU bán chậm
-├─ 07_dealer_forecast.py       ← (modular) Câu hỏi 3: BG/NBD cho 798 đại lý
-├─ 08_write_forecasts_to_db.py ← (modular) ghi 8 bảng vào schema tnbike_forecast
-├─ 09_generate_insights.py     ← sinh insights markdown cho Phase D
-└─ data/                       ← parquet artifacts (sinh khi chạy, không push lên Git)
+├─ README.md                ← file này
+├─ pipeline_forecast.py     ← ⭐ TOÀN BỘ Phase C trong 1 file — chạy 1 lệnh là xong
+├─ 09_generate_insights.py  ← (Phase D) sinh markdown insights từ kết quả forecast
+└─ data/                    ← parquet artifacts (sinh khi chạy, không push lên Git)
 ```
 
 ## Cách chạy
-
-### Cách 1 — Một file duy nhất (khuyến nghị) ⭐
 
 ```powershell
 # 1. Cài thư viện
 pip install pandas numpy scikit-learn scipy statsmodels lightgbm lifetimes psycopg2 pyarrow
 
 # 2. Đảm bảo PostgreSQL `tnbike_db` đã có schema `tnbike` + bảng `fact_sales`
-#    (chạy pipeline/ trước nếu chưa có)
+#    (chạy folder pipeline/ trước nếu chưa có)
 
 # 3. Chạy toàn bộ Phase C bằng 1 lệnh
 python forecast/pipeline_forecast.py
+
+# 4. (tùy chọn) Sinh markdown insights cho Phase D
+python forecast/09_generate_insights.py
 ```
 
-File `pipeline_forecast.py` đã gộp 8 bước (01 → 08) thành các function gọi tuần tự trong `__main__`:
-`build_dataset → backtest_total_group → backtest_sku → backtest_reconciled → forecast_q2_sales → forecast_q2_color → dealer_forecast → write_forecasts_to_db`.
-Kết quả: 8 bảng forecast trong schema `tnbike_forecast` của PostgreSQL, sẵn cho Power BI refresh.
+File `pipeline_forecast.py` gồm 8 function gọi tuần tự trong `__main__`:
 
-### Cách 2 — Chạy từng module (debug / phát triển)
+`build_dataset` → `backtest_total_group` → `backtest_sku` → `backtest_reconciled` → `forecast_q2_sales` → `forecast_q2_color` → `dealer_forecast` → `write_forecasts_to_db`
 
-```powershell
-pip install pandas numpy scikit-learn scipy statsmodels lightgbm lifetimes psycopg2 pyarrow
-
-python forecast/01_build_dataset.py
-python forecast/02_backtest_total_group.py    # validate model
-python forecast/03_backtest_sku.py
-python forecast/04_backtest_reconciled.py
-python forecast/05_forecast_q2_sales.py       # forecast chính
-python forecast/06_forecast_q2_color.py
-python forecast/07_dealer_forecast.py
-python forecast/08_write_forecasts_to_db.py   # push lên PostgreSQL
-python forecast/09_generate_insights.py       # gen markdown
-```
+Kết quả: 8 bảng forecast trong schema `tnbike_forecast` của PostgreSQL + parquet ở `forecast/data/`, sẵn cho Power BI refresh.
 
 ## Phương pháp
 
